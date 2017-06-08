@@ -120,7 +120,7 @@ func colored(icon string, percentage int) string {
 func updatePower() string {
 	const powerSupply = "/sys/class/power_supply/"
 	var enFull, enNow, enPerc int = 0, 0, 0
-	var plugged, err = ioutil.ReadFile(powerSupply + "ADP1/online")
+	var plugged, err = ioutil.ReadFile(powerSupply + "AC0/online")
 	if err != nil {
 		return "ÏERR"
 	}
@@ -224,10 +224,6 @@ func updateMemUse() string {
 
 // main updates the dwm statusbar every second
 func main() {
-	telAviv, err := time.LoadLocation("Israel")
-	if err != nil {
-		fmt.Println(err)
-	}
 	for {
 		var status = []string{
 			"",
@@ -235,7 +231,6 @@ func main() {
 			updateCPUUse(),
 			updateMemUse(),
 			updatePower(),
-			time.Now().In(telAviv).Format("Mon 02 " + dateSeparator + " 15:04:05"),
 			time.Now().Local().Format("Mon 02 " + dateSeparator + " 15:04:05"),
 		}
 		exec.Command("xsetroot", "-name", strings.Join(status, fieldSeparator)).Run()
